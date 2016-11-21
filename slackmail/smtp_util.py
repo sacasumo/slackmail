@@ -47,8 +47,7 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
     raise SMTPError(554, 'Rejecting message: missing or invalid authorization token')
 
   # fizz@buzz.com => fizz
-  echo(msg['to'])
-  channel = re.search('^([^@]+)@.+$', msg['to']).group(1)
+  channel = re.search('^([^@]+)@.+$', rcpttos[0]).group(1)
 
   try:
     r = requests.post(webhook_url, data=json.dumps({
