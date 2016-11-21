@@ -27,9 +27,9 @@ def error(msg):
 
 def _msg_text(msg):
   if msg.is_multipart():
-    return msg.get_payload(0, True).as_string()
+    return msg.get_payload(0, decode=True).as_string()
   else:
-    return msg.get_payload(True)
+    return msg.get_payload(decode=True)
 
 Message.text = _msg_text
 
@@ -60,7 +60,7 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
         }
       ]
     })
-    echo (json_data)
+    echo(json_data, fg='white')
     r = requests.post(webhook_url, data=json_data)
     r.raise_for_status()
   except Exception, e:
