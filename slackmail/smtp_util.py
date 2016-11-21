@@ -27,9 +27,9 @@ def error(msg):
 
 def _msg_text(msg):
   if msg.is_multipart():
-    return msg.get_payload(0).as_string()
+    return msg.get_payload(0, True).as_string()
   else:
-    return msg.get_payload()
+    return msg.get_payload(True)
 
 Message.text = _msg_text
 
