@@ -27,9 +27,9 @@ def error(msg):
 
 def _msg_text(msg):
   if msg.is_multipart():
-    return msg.get_payload(0, decode=True).as_string().decode('utf-8')
+    return msg.get_payload(0, decode=True).as_string()
   else:
-    return msg.get_payload(decode=True).decode('utf-8')
+    return msg.get_payload(decode=True)
 
 Message.text = _msg_text
 
@@ -47,7 +47,11 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
     raise SMTPError(554, 'Rejecting message: missing or invalid authorization token')
 
   # fizz@buzz.com => fizz
-  channel = re.search('^([^@]+)@.+$', rcpttos[0]).group(1)
+  channel = re.search(r'^([^@]+)@.+$', rcpttos[0]).group(1)
+  title = msg['subject']
+  formatted_text = html2text.html2text(msg.text())
+  # encode for slack
+  encoded_text = re.sub(r'\n', "\\n", formatted_text)
 
   try:
     json_data = json.dumps({
@@ -55,8 +59,8 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
       'channel': ('#%s' % channel),
       'attachments': [
         {
-            'title': msg['subject'].decode('utf-8'),
-            'text': html2text.html2text(msg.text()),
+            'title': title.decode('utf-8'),
+            'text': encoded_text.decode('utf-8'),
         }
       ]
     })
