@@ -50,7 +50,7 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
   channel = re.search('^([^@]+)@.+$', rcpttos[0]).group(1)
 
   try:
-    r = requests.post(webhook_url, data=json.dumps({
+    json_data = json.dumps({
       'username': mailfrom,
       'channel': ('#%s' % channel),
       'attachments': [
@@ -59,7 +59,9 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
             'text': html2text.html2text(msg.text()),
         }
       ]
-    }))
+    })
+    echo (json_data)
+    r = requests.post(webhook_url, data=json_data)
     r.raise_for_status()
   except Exception, e:
     error('Slack reported an error: %s' % e)
