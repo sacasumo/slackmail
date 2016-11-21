@@ -48,8 +48,8 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
 
   # fizz@buzz.com => fizz
   channel = re.search(r'^([^@]+)@.+$', rcpttos[0]).group(1)
-  title = msg['subject']
-  formatted_text = html2text.html2text(msg.text())
+  title = msg['subject'].decode('utf-8')
+  formatted_text = html2text.html2text(msg.text().decode('utf-8'))
   # encode for slack
   encoded_text = re.sub(r'\n', "\\n", formatted_text)
 
@@ -59,8 +59,8 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
       'channel': ('#%s' % channel),
       'attachments': [
         {
-            'title': title.decode('utf-8'),
-            'text': encoded_text.decode('utf-8'),
+            'title': title,
+            'text': encoded_text,
         }
       ]
     })
