@@ -27,9 +27,9 @@ def error(msg):
 
 def _msg_text(msg):
   if msg.is_multipart():
-    return msg.get_payload(0, decode=True).as_string()
+    return msg.get_payload(0, decode=True).as_string().decode('utf-8')
   else:
-    return msg.get_payload(decode=True)
+    return msg.get_payload(decode=True).decode('utf-8')
 
 Message.text = _msg_text
 
@@ -55,7 +55,7 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
       'channel': ('#%s' % channel),
       'attachments': [
         {
-            'title': msg['subject'],
+            'title': msg['subject'].decode('utf-8'),
             'text': html2text.html2text(msg.text()),
         }
       ]
