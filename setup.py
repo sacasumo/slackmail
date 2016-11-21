@@ -10,6 +10,7 @@ setuptools.setup(
     'click',
     'requests',
     'sqlalchemy',
+    'html2text',
   ],
   description=('Email-to-slack bridge.'),
   packages=['slackmail'],

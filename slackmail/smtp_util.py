@@ -6,6 +6,10 @@ import json
 import click
 import requests
 
+import re
+
+import html2text
+
 from email.message import Message
 
 def echo(msg, fg=None):
@@ -42,10 +46,19 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
   if authorization_token and not authorization_token in msg.as_string():
     raise SMTPError(554, 'Rejecting message: missing or invalid authorization token')
 
+  # fizz@buzz.com => fizz
+  channel = re.search('^([^@]+)@.+$', msg['to']).group(1)
+
   try:
     r = requests.post(webhook_url, data=json.dumps({
-      'text' : msg.text(),
-      'username': msg['from']
+      'username': msg['from'],
+      'channel': ('#%s' % channel),
+      'attachments': [
+        {
+            'title': msg['subject'],
+            'text': html2text.html2text(msg.text()),
+        }
+      ]
     }))
     r.raise_for_status()
   except Exception, e:
