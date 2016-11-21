@@ -60,7 +60,6 @@ def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=Non
         }
       ]
     })
-    echo(json_data, fg='white')
     r = requests.post(webhook_url, data=json_data)
     r.raise_for_status()
   except Exception, e:
