@@ -26,7 +26,8 @@ def error(msg):
   return echo(msg, fg='red')
 
 def _md_to_slack_format(str):
-  str = re.sub(r'\[(.*)\]\(([^\s]+)\s?.*\)', r'<\2|\1>', str)
+  # [text](url "alt") / [text](url) => <url|text>
+  str = re.sub(r'\[(.*)\]\(([^\s]+) *.*\)', r'<\2|\1>', str)
   return str
 
 def _html_parser():
