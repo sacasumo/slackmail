@@ -26,12 +26,12 @@ def error(msg):
   return echo(msg, fg='red')
 
 def _md_to_slack_format(str):
-  # [](url "title") => <url|title>
-  str = re.sub(r'\[\]\((\S+)\s*"([^"]+)"\)', r'<\1|\2>', str)
+  # [](url "title" ) => <url|title>
+  str = re.sub(r'\[\]\((\S+)\s*"([^"]+)"\s*\)', r'<\1|\2>', str)
   # [text](url) => <url|text>
-  str = re.sub(r'\[([^\]+]+)\]\((\S+)\)', r'<\2|\1>', str)
-  # [text](url "title") => <url|text>
-  str = re.sub(r'\[([^\]+]+)\]\((\S+)\s*"([^"]+)"\)', r'<\2|\1>', str)
+  str = re.sub(r'\[([^\]]+)\]\((\S+)\s*\)', r'<\2|\1>', str)
+  # [text](url "title" ) => <url|text>
+  str = re.sub(r'\[([^\]]+)\]\((\S+)\s*"([^"]+)"\s*\)', r'<\2|\1>', str)
   return str
 
 def _remove_line_break(str):
