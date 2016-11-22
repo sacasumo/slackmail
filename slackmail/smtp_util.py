@@ -11,6 +11,7 @@ import re
 import html2text
 
 from email.message import Message
+from email.header import decode_header
 
 def echo(msg, fg=None):
   if not fg:
@@ -50,7 +51,8 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
 
   # fizz@buzz.com => fizz
   channel = re.search(r'^([^@]+)@.+$', rcptto).group(1)
-  title = msg['subject'].decode('utf-8')
+  decoded_title, encoding = decode_header(msg['subject'])
+  title = decoded_title.decode(encoding)
   formatted_text = html2text.html2text(msg.text().decode('utf-8'))
   # encode for slack
   encoded_text = re.sub(r'\n', "\\n", formatted_text)
