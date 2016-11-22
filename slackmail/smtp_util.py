@@ -44,6 +44,10 @@ class SMTPError(Exception):
   def __repr__(self):
     return '%d %s' % (self.code, self.message)
 
+# reduce multi-line title
+def _reduce_title(title, append):
+  decoded_title , encoding = append
+  return title + decoded_title.decode(encoding if encoding is not None else 'utf-8')
 
 def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None):
   if authorization_token and not authorization_token in msg.as_string():
@@ -51,8 +55,8 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
 
   # fizz@buzz.com => fizz
   channel = re.search(r'^([^@]+)@.+$', rcptto).group(1)
-  decoded_title, encoding = decode_header(msg['subject'])
-  title = decoded_title.decode(encoding)
+  decoded_titles = decode_header(msg['subject'])
+  title = reduce(_reduce_title, decode_header(msg['subject']), u'')
   formatted_text = html2text.html2text(msg.text().decode('utf-8'))
   # encode for slack
   encoded_text = re.sub(r'\n', "\\n", formatted_text)
