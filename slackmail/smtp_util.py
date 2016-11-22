@@ -27,7 +27,8 @@ def error(msg):
 
 def _reduce_message_texts(text, append):
   maybeText = append.get_payload(decode=True)
-  return text + (u'\n' + maybeText if maybeText is not None else u'')
+  encoding = append.get_content_charset('utf-8')
+  return text + (u'\n' + maybeText.decode(encoding) if maybeText is not None else u'')
 
 def _msg_text(msg):
   if msg.is_multipart():
@@ -35,7 +36,8 @@ def _msg_text(msg):
     return reduce(_reduce_message_texts, text_payloads, u'')
   else:
     text = msg.get_payload(decode=True)
-    return (text if text is not None else u'')
+    encoding = msg.get_content_charset('utf-8')
+    return (text.decode(encoding) if text is not None else u'')
 
 Message.text = _msg_text
 
@@ -60,7 +62,7 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
   channel = re.search(r'^([^@]+)@.+$', rcptto).group(1)
   decoded_titles = decode_header(msg['subject'])
   title = reduce(_reduce_encoded_header, decode_header(msg['subject']), u'')
-  formatted_text = html2text.html2text(msg.text().decode('utf-8'))
+  formatted_text = html2text.html2text(msg.text())
   # encode for slack
   encoded_text = re.sub(r'\n', "\\n", formatted_text)
 
