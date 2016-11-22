@@ -27,7 +27,7 @@ def error(msg):
 
 def _md_to_slack_format(str):
   # [text](url "title") / [text](url) => <url|text>
-  str = re.sub(r'\[(.*)\]\((.*)\s*.*\)', r'<\2|\1>', str)
+  str = re.sub(r'\[(.*)\]\((\S*)\s*.*\)', r'<\2|\1>', str)
   return str
 
 def _remove_line_break(str):
