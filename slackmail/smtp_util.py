@@ -42,12 +42,12 @@ class SMTPError(Exception):
     return '%d %s' % (self.code, self.message)
 
 
-def forward_message(mailfrom, rcpttos, msg, webhook_url, authorization_token=None):
+def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None):
   if authorization_token and not authorization_token in msg.as_string():
     raise SMTPError(554, 'Rejecting message: missing or invalid authorization token')
 
   # fizz@buzz.com => fizz
-  channel = re.search(r'^([^@]+)@.+$', rcpttos[0]).group(1)
+  channel = re.search(r'^([^@]+)@.+$', rcptto).group(1)
   title = msg['subject'].decode('utf-8')
   formatted_text = html2text.html2text(msg.text().decode('utf-8'))
   # encode for slack

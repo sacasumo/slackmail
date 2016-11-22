@@ -14,13 +14,13 @@ class SimpleServer(smtpd.SMTPServer):
 
   def process_message(self, peer, mailfrom, rcpttos, data):
     msg = Parser().parsestr(data)
-    try:
-      echo('Processing message... %s, %s, %s' % (peer, mailfrom, rcpttos))
-      forward_message(mailfrom, rcpttos, msg, self.webhook_url,
-          self.authorization_token)
-    except Exception, e:
-      error('Failed to process message from %s' % mailfrom)
-      error(traceback.format_exc())
+    echo('Processing message... %s, %s, %s' % (peer, mailfrom, rcpttos))
+    for rcptto in rcpttos:
+      try:
+        forward_message(mailfrom, rcptto, msg, self.webhook_url, self.authorization_token)
+      except Exception, e:
+        error('Failed to process message from %s to %s' % (mailfrom, rcptto))
+        error(traceback.format_exc())
 
 @click.command()
 @click.option('--webhook-url', help='URL for your webhook integration', required=True)

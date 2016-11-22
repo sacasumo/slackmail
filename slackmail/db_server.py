@@ -97,6 +97,7 @@ class DBServer(smtpd.SMTPServer):
   def _forward(self, mailfrom, rcpttos, msg):
     session = self._session()
     hook = session.query(Hook).filter(Hook.email == rcpttos[0]).one()
+    # fixme: rcpttos -> rcptto
     forward_message(mailfrom, rcpttos, msg, hook.url, hook.auth_token)
 
   def process_message(self, peer, mailfrom, rcpttos, data):
