@@ -25,6 +25,10 @@ def warn(msg):
 def error(msg):
   return echo(msg, fg='red')
 
+def _md_to_slack_format(str):
+  str = re.sub(r'\[(.*)\]\(([^\s]+)\s?.*\)', r'<\2|\1>', str)
+  return str
+
 def _html_parser():
   parser = html2text.HTML2Text()
   # https://github.com/Alir3z4/html2text/blob/master/docs/usage.md#available-options
@@ -46,7 +50,7 @@ def _message_to_text(msg):
       return (maybe_text.decode(encoding) if maybe_text is not None else None)
     else:
       maybe_text = msg.get_payload(decode=True)
-      return (_html_parser().handle(maybe_text.decode(encoding)) if maybe_text is not None else None)
+      return (_md_to_slack_format(_html_parser().handle(maybe_text.decode(encoding))) if maybe_text is not None else None)
   else: # e.g. image/png
     return None
 
