@@ -39,7 +39,7 @@ def _html_parser():
 
 # DO NOT PASS MULTIPART MESSAGE !
 def _message_to_text(msg):
-  encoding = append.get_content_charset('utf-8')
+  encoding = msg.get_content_charset('utf-8')
   if msg.get_content_maintype() == 'text':
     if msg.get_content_subtype() == 'plain':
       return msg.get_payload(decode=True)
