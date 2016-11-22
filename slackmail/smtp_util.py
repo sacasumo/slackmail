@@ -37,6 +37,7 @@ def _html_parser():
   parser.ignore_anchors = True
   parser.ignore_tables = True
   parser.skip_internal_links = True
+  parser.inline_links = True
   parser.protext_links = True
   parser.single_line_break = True
   parser.re_space = True
