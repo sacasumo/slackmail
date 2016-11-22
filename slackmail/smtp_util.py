@@ -44,7 +44,7 @@ class SMTPError(Exception):
   def __repr__(self):
     return '%d %s' % (self.code, self.message)
 
-# reduce multi-line title
+# reduce multi-line header and decode
 def _reduce_encoded_header(title, append):
   decoded_title , encoding = append
   return title + decoded_title.decode(encoding if encoding is not None else 'utf-8')
