@@ -27,7 +27,7 @@ def error(msg):
 
 def _md_to_slack_format(str):
   # [text](url "title") / [text](url) => <url|text>
-  str = re.sub(r'\[(.*)\]\(([^\s]+) *.*\)', r'<\2|\1>', str)
+  str = re.sub(r'\[(.*)\]\((.*)\s*.*\)', r'<\2|\1>', str)
   return str
 
 def _remove_line_break(str):
@@ -36,6 +36,7 @@ def _remove_line_break(str):
 def _html_parser():
   parser = html2text.HTML2Text()
   # https://github.com/Alir3z4/html2text/blob/master/docs/usage.md#available-options
+  parser.body_width = 0
   parser.ignore_images = True
   parser.ignore_anchors = True
   parser.ignore_tables = True
