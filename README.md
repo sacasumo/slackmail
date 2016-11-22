@@ -25,7 +25,8 @@ operate as a "real" email server!
 ```
 slackmail-local\
   --webhook-url='https://mydomain.slack.com...&token=123'\
-  [--listen-address=host:port]\
+  [--listen-host=host]\
+  [--listen-port=port]\
   [--authorization_token=secureME]
 ```
 
@@ -39,3 +40,12 @@ slackmail-db [--listen-address=host:port]
 
 The default database used is just a SQLite database called `mail.db`.  It will
 be created in whatever directory you run the slackmail-db command.
+
+## Docker
+
+```
+docker run -it \
+  --webhook-url='https://mydomain.slack.com...&token=123' \
+  --listen-host=host \
+  [--authorization_token=secureME]
+```

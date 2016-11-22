@@ -26,11 +26,12 @@ class SimpleServer(smtpd.SMTPServer):
 @click.option('--webhook-url', help='URL for your webhook integration', required=True)
 @click.option('--authorization-token', default=None,
   help='Authorization token.  No messages will be forwarded if they do not include this token.')
-@click.option('--listen-address', default='localhost:5025',
+@click.option('--listen-host', default='localhost',
   help='Address to listen on.')
-def simple_server(webhook_url, authorization_token, listen_address):
-  host, port = listen_address.split(':')
-  port = int(port)
+@click.option('--listen-port', default='5025',
+  help='Address to listen on.')
+def simple_server(webhook_url, authorization_token, listen_host, listen_port):
+  host = listen_host
+  port = int(listen_port)
   server = SimpleServer((host, port), webhook_url, authorization_token)
   run_server(server)
-
