@@ -56,8 +56,8 @@ def _message_to_text(msg):
     return None
 
 def _reduce_message_texts(text, append):
-  maybeText = _message_to_text(append)
-  return text + (u'\n' + maybeText if maybeText is not None else u'')
+  maybe_text = _message_to_text(append)
+  return text + (u'\n' + maybe_text if maybe_text is not None else u'')
 
 def _msg_text(msg):
   if msg.is_multipart():
