@@ -27,7 +27,7 @@ def error(msg):
 
 def _md_to_slack_format(str):
   # [text](url "alt") / [text](url) => <url|text>
-  str = re.sub(r'\[(.*)\]\(([^\s]+) *.*\)', r'<\2|\1>', str)
+  str = re.sub(r'\[(.*)\]\(([^\s]+)\s*.*\)', r'<\2|\1>', str)
   return str
 
 def _remove_line_break(str):
@@ -59,7 +59,7 @@ def _message_to_text(msg):
         return None
 
       normalized_html = _remove_line_break(text.decode(encoding))
-      
+
       return _md_to_slack_format(_html_parser().handle(normalized_html))
 
   else: # e.g. image/png
