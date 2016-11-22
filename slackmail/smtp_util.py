@@ -30,6 +30,9 @@ def _md_to_slack_format(str):
   str = re.sub(r'\[(.*)\]\(([^\s]+) *.*\)', r'<\2|\1>', str)
   return str
 
+def _remove_line_break(str):
+  return re.sub(r'(\r|\n|\r\n)', '', str)
+
 def _html_parser():
   parser = html2text.HTML2Text()
   # https://github.com/Alir3z4/html2text/blob/master/docs/usage.md#available-options
@@ -50,9 +53,15 @@ def _message_to_text(msg):
     if msg.get_content_subtype() == 'plain':
       maybe_text = msg.get_payload(decode=True)
       return (maybe_text.decode(encoding) if maybe_text is not None else None)
-    else:
-      maybe_text = msg.get_payload(decode=True)
-      return (_md_to_slack_format(_html_parser().handle(maybe_text.decode(encoding))) if maybe_text is not None else None)
+    else: # e.g. text/html
+      text = msg.get_payload(decode=True)
+      if text is None:
+        return None
+
+      normalized_html = _remove_line_break(text.decode(encoding))
+      
+      return _md_to_slack_format(_html_parser().handle(normalized_html))
+
   else: # e.g. image/png
     return None
 
