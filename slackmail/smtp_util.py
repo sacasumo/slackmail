@@ -42,16 +42,17 @@ def _message_to_text(msg):
   encoding = msg.get_content_charset('utf-8')
   if msg.get_content_maintype() == 'text':
     if msg.get_content_subtype() == 'plain':
-      return msg.get_payload(decode=True)
+      maybe_text = msg.get_payload(decode=True)
+      return (maybe_text.decode(encoding) if maybe_text is not None else None)
     else:
       maybe_text = msg.get_payload(decode=True)
-      return  (_html_parser().handle(maybe_text.decode(encoding)) if maybe_text is not None else None)
+      return (_html_parser().handle(maybe_text.decode(encoding)) if maybe_text is not None else None)
   else: # e.g. image/png
     return None
 
 def _reduce_message_texts(text, append):
   maybeText = _message_to_text(append)
-  return text + (u'\n' + maybeText.decode(encoding) if maybeText is not None else u'')
+  return text + (u'\n' + maybeText if maybeText is not None else u'')
 
 def _msg_text(msg):
   if msg.is_multipart():
@@ -59,7 +60,7 @@ def _msg_text(msg):
     return reduce(_reduce_message_texts, text_payloads, u'')
   else:
     maybe_text = _message_to_text(msg)
-    return (maybe_text.decode(encoding) if maybe_text is not None else u'')
+    return (maybe_text if maybe_text is not None else u'')
 
 Message.text = _msg_text
 
