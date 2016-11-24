@@ -26,6 +26,11 @@ def error(msg):
   return echo(msg, fg='red')
 
 def _md_to_slack_format(str):
+  # **text** => *text*
+  str = re.sub(r'\*\*([^*\n]+)\*\*', r'*\1*', str)
+  # TODO: *text* => _text_
+  # ![]() => remove
+  str = re.sub(r'!\[[^\]]*\]\([^)]*\)', r'', str)
   # [](url "title" ) => <url|title>
   str = re.sub(r'\[\]\((\S+)\s*"([^"]+)"\s*\)', r'<\1|\2>', str)
   # [text](url "title" ) => <url|text>
@@ -41,7 +46,6 @@ def _html_parser():
   parser = html2text.HTML2Text()
   # https://github.com/Alir3z4/html2text/blob/master/docs/usage.md#available-options
   parser.body_width = 0
-  parser.ignore_images = True
   parser.ignore_tables = True
   parser.ignore_anchors = True
   parser.skip_internal_links = True
