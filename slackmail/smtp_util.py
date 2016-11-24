@@ -116,7 +116,7 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
   try:
     json_data = json.dumps({
       'username': mailfrom,
-      'channel': ('#%s' % channel),
+      'channel': ('@%s' % channel),
       'attachments': [
         {
             'title': title,
