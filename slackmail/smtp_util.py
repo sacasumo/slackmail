@@ -42,6 +42,7 @@ def _html_parser():
   # https://github.com/Alir3z4/html2text/blob/master/docs/usage.md#available-options
   parser.body_width = 0
   parser.ignore_images = True
+  parser.ignore_tables = True
   parser.ignore_anchors = True
   parser.skip_internal_links = True
   parser.inline_links = True
