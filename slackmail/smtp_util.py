@@ -105,8 +105,7 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
   if authorization_token and not authorization_token in msg.as_string():
     raise SMTPError(554, 'Rejecting message: missing or invalid authorization token')
 
-  # fizz@buzz.com => fizz
-  channel = re.search(r'^([^@]+)@.+$', rcptto).group(1)
+  channel = parse_channel(rcptto)
   decoded_titles = decode_header(msg['subject'])
   title = reduce(_reduce_encoded_header, decode_header(msg['subject']), u'')
   text = msg.text()
@@ -116,7 +115,7 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
   try:
     json_data = json.dumps({
       'username': mailfrom,
-      'channel': ('@%s' % channel),
+      'channel': channel,
       'attachments': [
         {
             'title': title,
@@ -132,6 +131,22 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
     error('Slack reported an error: %s' % e)
     raise SMTPError(554, 'Error posting to webhook')
 
+def parse_channel(rcpt_to):
+  # fizz@buzz.com => fizz
+  mail_account = re.search(r'^([^@]+)@.+$', rcpt_to).group(1)
+
+  private = re.match("^private\.(.+)", mail_account)
+  if private:
+    return "" + private.group(1)
+
+  public = re.match("^public\.(.+)", mail_account)
+  if public:
+    return "#" + public.group(1)
+
+  dm = re.match("^dm\.(.+)", mail_account)
+  if dm:
+    return "@" + dm.group(1)
+  return "@" + mail_account
 
 def run_server(server):
   echo('Starting SMTP server on %s' % (server._localaddr,), fg='green')

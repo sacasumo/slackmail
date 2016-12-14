@@ -49,3 +49,18 @@ docker run -it \
   --listen-host=host \
   [--authorization_token=secureME]
 ```
+
+## Destination channel
+
+### DM
+
+* `fizz@example.com` ⇒ `@fizz`
+* `dm.fizz@example.com` ⇒ `@fizz`
+
+### Public channel
+
+* `public.fizz@example.com` ⇒ `#fizz`
+
+### Private channel
+
+* `private.fizz@example.com` ⇒ `fizz`
