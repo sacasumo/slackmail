@@ -5,7 +5,7 @@ import setuptools
 setuptools.setup(
   name='slackmail',
   version='0.01',
-  url='http://github.com/iodine/slackmail',
+  url='http://github.com/sacasumo/slackmail',
   install_requires=[
     'click',
     'requests',
