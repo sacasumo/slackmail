@@ -115,7 +115,7 @@ def forward_message(mailfrom, rcptto, msg, webhook_url, authorization_token=None
   try:
     json_data = json.dumps({
       'username': mailfrom,
-      'icon_url': https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-email-128.png,
+      'icon_url': 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-email-128.png',
       'channel': channel,
       'attachments': [
         {
