@@ -12,7 +12,7 @@ slack, just run this server and have them "email" you: `ping@slackmail.mydomain.
 ## Installation
 
 ```
-pip install [--user] git+https://github.com/iodine/slackmail
+pip install [--user] git+https://github.com/sacasumo/slackmail
 ```
 
 # Running
