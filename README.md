@@ -52,7 +52,7 @@ docker run -it \
 
 ## Destination channel
 
-### DM
+### Direct Message
 
 * `fizz@example.com` ⇒ `@fizz`
 * `dm.fizz@example.com` ⇒ `@fizz`
